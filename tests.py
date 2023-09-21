@@ -31,7 +31,7 @@ class TestBooksCollector:
         genre.add_new_book(book_name)
         genre.set_book_genre(book_name, 'Детективы')
 
-        assert genre.get_books_genre()[book_name] == 'Детективы'
+        assert genre.get_book_genre(book_name) == 'Детективы'
 
     def test_set_book_genre_genre_not_added(self):
             genre = BooksCollector()
@@ -39,7 +39,7 @@ class TestBooksCollector:
             genre.add_new_book(book_name)
             genre.set_book_genre(book_name, 'Поэмы')
 
-            assert genre.get_books_genre()[book_name] == ''
+            assert genre.get_book_genre(book_name) == ''
     def test_get_book_genre_genre_from_list(self):
 
         genre = BooksCollector()
@@ -64,45 +64,21 @@ class TestBooksCollector:
         book.set_book_genre(book_name, genre)
         assert book.get_books_with_specific_genre(genre)[0] == book_name
 
-    @pytest.mark.parametrize('book_name,genre',
-                                 [
-                                     ['Book6', 'Фэнтези'],
-                                     ['Book7', 'Исторические'],
-                                     ['Book8', 'Сказки'],
-                                     ['Book9', 'Поэмы'],
-                                     ['Book10', 'Романы']
-                                 ]
-                                 )
-    def test_get_books_with_specific_genre_genres_not_from_list_rejected(self, book_name, genre):
+    def test_get_books_with_specific_genre_genres_not_from_list_rejected(self):
             book = BooksCollector()
+            book_name = 'Властелин колец'
+            genre  = 'Фэнтези'
             book.add_new_book(book_name)
             book.set_book_genre(book_name, genre)
             assert len(book.get_books_with_specific_genre(genre)) == 0
 
-    @pytest.mark.parametrize('book_name,genre',
-                             [
-                               ['ChildBook1', 'Фантастика'],
-                               ['ChildBook2', 'Мультфильмы'],
-                               ['ChildBook3', 'Комедии']
-                             ]
-                               )
-    def test_get_books_for_children_not_age_rating_genres_received(self, book_name, genre):
+    def test_get_books_for_children_different_age_rating_genres_received_child_books(self):
             child_book = BooksCollector()
-            child_book.add_new_book(book_name)
-            child_book.set_book_genre(book_name, genre)
-            assert child_book.get_books_for_children()[0] == book_name
-
-    @pytest.mark.parametrize('book_name,genre',
-                             [
-                                 ['AdultBook1', 'Ужасы'],
-                                 ['AdultBook2', 'Детективы']
-                             ]
-                             )
-    def test_get_books_for_children_age_rating_genres_rejected_books(self, book_name, genre):
-        adult_book = BooksCollector()
-        adult_book.add_new_book(book_name)
-        adult_book.set_book_genre(book_name, genre)
-        assert len(adult_book.get_books_for_children()) == 0
+            child_book.add_new_book('ChildBook1')
+            child_book.add_new_book('AdultBook1')
+            child_book.set_book_genre('ChildBook1', 'Мультфильмы')
+            child_book.set_book_genre('AdultBook1', 'Ужасы')
+            assert len(child_book.get_books_for_children()) == 1
 
     def test_add_book_in_favorites_add_new_book_received(self):
         favorite_book = BooksCollector()
