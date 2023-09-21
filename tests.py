@@ -40,6 +40,7 @@ class TestBooksCollector:
             genre.set_book_genre(book_name, 'Поэмы')
 
             assert genre.get_book_genre(book_name) == ''
+
     def test_get_book_genre_genre_from_list(self):
 
         genre = BooksCollector()
